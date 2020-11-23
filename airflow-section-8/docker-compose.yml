@@ -15,7 +15,7 @@ services:
             - ./mnt/postgres:/var/lib/postgresql/data/pgdata
 
     webserver:
-        image: piboonsak/ais-airflow:temp-3
+        image: piboonsak/ais-airflow:temp-4
         restart: always
         depends_on:
             - postgres
@@ -46,7 +46,7 @@ services:
             retries: 3
 
     flower:
-        image: piboonsak/ais-airflow:temp-3
+        image: piboonsak/ais-airflow:temp-4
         restart: always
         depends_on:
             - redis
@@ -58,7 +58,7 @@ services:
         command: flower
 
     scheduler:
-        image: piboonsak/ais-airflow:temp-3
+        image: piboonsak/ais-airflow:temp-4
         restart: always
         depends_on:
             - webserver
@@ -81,7 +81,7 @@ services:
         command: scheduler
 
     worker:
-        image: piboonsak/ais-airflow:temp-3
+        image: piboonsak/ais-airflow:temp-4
         restart: always
         depends_on:
             - scheduler
