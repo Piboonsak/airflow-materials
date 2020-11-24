@@ -1,4 +1,4 @@
-version: '2.1'
+version: '2.2'
 services:
     redis:
         image: 'redis:5.0.5'
@@ -12,7 +12,7 @@ services:
             - POSTGRES_DB=airflow
             - PGDATA=/var/lib/postgresql/data/pgdata
         volumes:
-            - ./mnt/postgres:/var/lib/postgresql/data/pgdata
+            - /home/airflow/data/postgres:/var/lib/postgresql/data/pgdata
 
     webserver:
         image: piboonsak/ais-airflow:temp-4.1
@@ -30,10 +30,10 @@ services:
             - REDIS_PASSWORD=redispass
             - PYTHONPATH=/usr/local/airflow/conf/
         volumes:
-            - ./mnt/airflow/dags:/usr/local/airflow/dags
-            - ./mnt/airflow/airflow.cfg:/usr/local/airflow/airflow.cfg
-            - ./mnt/airflow/logs:/usr/local/airflow/logs
-            - ./mnt/airflow/conf:/usr/local/airflow/conf
+            - /home/airflow/data/airflow/dags:/usr/local/airflow/dags
+            - /home/airflow/data/airflow/airflow.cfg:/usr/local/airflow/airflow.cfg
+            - /home/airflow/data/airflow/logs:/usr/local/airflow/logs
+            - /home/airflow/data/airflow/conf:/usr/local/airflow/conf
             # Uncomment to include custom plugins
             # - ./plugins:/usr/local/airflow/plugins
         ports:
@@ -63,10 +63,10 @@ services:
         depends_on:
             - webserver
         volumes:
-            - ./mnt/airflow/dags:/usr/local/airflow/dags
-            - ./mnt/airflow/airflow.cfg:/usr/local/airflow/airflow.cfg
-            - ./mnt/airflow/logs:/usr/local/airflow/logs   
-            - ./mnt/airflow/conf:/usr/local/airflow/conf
+            - /home/airflow/data/airflow/dags:/usr/local/airflow/dags
+            - /home/airflow/data/airflow/airflow.cfg:/usr/local/airflow/airflow.cfg
+            - /home/airflow/data/airflow/logs:/usr/local/airflow/logs   
+            - /home/airflow/data/airflow/conf:/usr/local/airflow/conf
         # Uncomment to include custom plugins
             # - ./plugins:/usr/local/airflow/plugins
         environment:
@@ -86,10 +86,10 @@ services:
         depends_on:
             - scheduler
         volumes:
-            - ./mnt/airflow/dags:/usr/local/airflow/dags
-            - ./mnt/airflow/airflow.cfg:/usr/local/airflow/airflow.cfg
-            - ./mnt/airflow/logs:/usr/local/airflow/logs   
-            - ./mnt/airflow/conf:/usr/local/airflow/conf  
+            - /home/airflow/data/airflow/dags:/usr/local/airflow/dags
+            - /home/airflow/data/airflow/airflow.cfg:/usr/local/airflow/airflow.cfg
+            - /home/airflow/data/airflow/logs:/usr/local/airflow/logs   
+            - /home/airflow/data/airflow/conf:/usr/local/airflow/conf  
             # Uncomment to include custom plugins
             # - ./plugins:/usr/local/airflow/plugins
         environment:
