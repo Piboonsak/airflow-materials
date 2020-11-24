@@ -75,6 +75,8 @@ target/
 # pyenv
 .python-version
 
+# Airflow databases
+.airflow-materials/airflow-section-8/mnt/postgres/
 # celery beat schedule file
 celerybeat-schedule
 
