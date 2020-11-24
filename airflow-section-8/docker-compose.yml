@@ -1,8 +1,9 @@
-version: '2.1'
+version: '2.2'
 services:
     redis:
         image: 'redis:5.0.5'
         command: redis-server --requirepass redispass
+        network_mode: "host"
 
     postgres:
         image: postgres:9.6
@@ -13,6 +14,7 @@ services:
             - PGDATA=/var/lib/postgresql/data/pgdata
         volumes:
             - /home/airflow/data/postgres:/var/lib/postgresql/data/pgdata
+        network_mode: "host"
 
     webserver:
         image: piboonsak/ais-airflow:temp-4
@@ -36,6 +38,7 @@ services:
             - /home/airflow/data/airflow/conf:/usr/local/airflow/conf
             # Uncomment to include custom plugins
             # - ./plugins:/usr/local/airflow/plugins
+        network_mode: "host"
         ports:
             - "8080:8080"
         command: webserver
@@ -53,6 +56,7 @@ services:
         environment:
             - EXECUTOR=Celery
             - REDIS_PASSWORD=redispass
+        network_mode: "host"
         ports:
             - "5555:5555"
         command: flower
@@ -69,6 +73,7 @@ services:
             - /home/airflow/data/airflow/conf:/usr/local/airflow/conf
         # Uncomment to include custom plugins
             # - ./plugins:/usr/local/airflow/plugins
+        network_mode: "host"
         environment:
             - LOAD_EX=n
             - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
@@ -92,6 +97,7 @@ services:
             - /home/airflow/data/airflow/conf:/usr/local/airflow/conf  
             # Uncomment to include custom plugins
             # - ./plugins:/usr/local/airflow/plugins
+        network_mode: "host"
         environment:
             - FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
             - EXECUTOR=Celery
