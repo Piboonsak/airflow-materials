@@ -13,7 +13,7 @@ services:
             - POSTGRES_DB=airflow
             - PGDATA=/var/lib/postgresql/data/pgdata
         volumes:
-            - /home/airflow/data/postgres:/var/lib/postgresql/data/pgdata
+            - /data/airflow/postgres:/var/lib/postgresql/data/pgdata
         network_mode: "host"
 
     webserver:
@@ -32,10 +32,10 @@ services:
             - REDIS_PASSWORD=redispass
             - PYTHONPATH=/usr/local/airflow/conf/
         volumes:
-            - /home/airflow/data/airflow/dags:/usr/local/airflow/dags
-            - /home/airflow/data/airflow/airflow.cfg:/usr/local/airflow/airflow.cfg
-            - /home/airflow/data/airflow/logs:/usr/local/airflow/logs
-            - /home/airflow/data/airflow/conf:/usr/local/airflow/conf
+            - /data/airflow/airflow/dags:/usr/local/airflow/dags
+            - /data/airflow/airflow/airflow.cfg:/usr/local/airflow/airflow.cfg
+            - /data/airflow/airflow/logs:/usr/local/airflow/logs
+            - /data/airflow/airflow/conf:/usr/local/airflow/conf
             # Uncomment to include custom plugins
             # - ./plugins:/usr/local/airflow/plugins
         network_mode: "host"
@@ -67,10 +67,10 @@ services:
         depends_on:
             - webserver
         volumes:
-            - /home/airflow/data/airflow/dags:/usr/local/airflow/dags
-            - /home/airflow/data/airflow/airflow.cfg:/usr/local/airflow/airflow.cfg
-            - /home/airflow/data/airflow/logs:/usr/local/airflow/logs   
-            - /home/airflow/data/airflow/conf:/usr/local/airflow/conf
+            - /data/airflow/airflow/dags:/usr/local/airflow/dags
+            - /data/airflow/airflow/airflow.cfg:/usr/local/airflow/airflow.cfg
+            - /data/airflow/airflow/logs:/usr/local/airflow/logs   
+            - /data/airflow/airflow/conf:/usr/local/airflow/conf
         # Uncomment to include custom plugins
             # - ./plugins:/usr/local/airflow/plugins
         network_mode: "host"
@@ -91,10 +91,10 @@ services:
         depends_on:
             - scheduler
         volumes:
-            - /home/airflow/data/airflow/dags:/usr/local/airflow/dags
-            - /home/airflow/data/airflow/airflow.cfg:/usr/local/airflow/airflow.cfg
-            - /home/airflow/data/airflow/logs:/usr/local/airflow/logs   
-            - /home/airflow/data/airflow/conf:/usr/local/airflow/conf  
+            - /data/airflow/airflow/dags:/usr/local/airflow/dags
+            - /data/airflow/airflow/airflow.cfg:/usr/local/airflow/airflow.cfg
+            - /data/airflow/airflow/logs:/usr/local/airflow/logs   
+            - /data/airflow/airflow/conf:/usr/local/airflow/conf  
             # Uncomment to include custom plugins
             # - ./plugins:/usr/local/airflow/plugins
         network_mode: "host"
