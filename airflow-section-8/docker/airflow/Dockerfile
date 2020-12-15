@@ -54,6 +54,17 @@ RUN set -ex \
     && apt-get install -yqq --no-install-recommends \
         $buildDeps \
         freetds-bin \
+        krb5-user \
+        ldap-utils \
+        libffi6 \
+        libsasl2-2 \
+        libsasl2-modules \
+        libssl1.1 \
+        locales  \
+        lsb-release \
+        sasl2-bin \
+        sqlite3 \
+        unixodbc \
         build-essential \
         default-libmysqlclient-dev \
         apt-utils \
@@ -96,7 +107,7 @@ RUN chmod -R 755 /entrypoint.sh
 
 EXPOSE 443 8080 5555 8793
 
-USER airflow
+USER dlarchive
 WORKDIR ${AIRFLOW_USER_HOME}
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["webserver"]
