@@ -100,7 +100,7 @@ RUN set -ex \
 COPY script/entrypoint.sh /entrypoint.sh
 COPY config/airflow.cfg ${AIRFLOW_USER_HOME}/airflow.cfg
 
-RUN chown -R airflow: ${AIRFLOW_USER_HOME}
+RUN chown -R dlarchive: ${AIRFLOW_USER_HOME}
 RUN mkdir -p ${AIRFLOW_USER_HOME}/logs
 RUN chmod -R 777 ${AIRFLOW_USER_HOME}
 RUN chmod -R 755 /entrypoint.sh
