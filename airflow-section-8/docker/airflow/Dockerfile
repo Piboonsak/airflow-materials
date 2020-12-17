@@ -54,8 +54,6 @@ RUN set -ex \
     && apt-get install -yqq --no-install-recommends \
         $buildDeps \
         freetds-bin \
-        krb5-user \
-        ldap-utils \
         build-essential \
         default-libmysqlclient-dev \
         apt-utils \
