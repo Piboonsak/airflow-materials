@@ -12,7 +12,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV TERM linux
 
 # Airflow
-ARG AIRFLOW_VERSION=1.10.10
+ARG AIRFLOW_VERSION=1.10.11
 ARG AIRFLOW_USER_HOME=/usr/local/airflow
 ARG AIRFLOW_DEPS=""
 ARG PYTHON_DEPS=""
@@ -57,9 +57,13 @@ RUN set -ex \
         build-essential \
         default-libmysqlclient-dev \
         apt-utils \
+        krb5-user krb5-kdc krb5-admin-server krb5-config \
+        libpam-krb5 \
         curl \
         wget \
         vim \
+        net-tools \
+        openssh-server \
         rsync \
         netcat \
         locales \
@@ -72,7 +76,7 @@ RUN set -ex \
     && pip install pyOpenSSL \
     && pip install ndg-httpsclient \
     && pip install pyasn1 \
-    && pip install apache-airflow[aws,s3,azure,crypto,celery,postgres,hdfs,hive,jdbc,mysql,password,ldap,kerberos,elasticsearch,statsd,ssh${AIRFLOW_DEPS:+,}${AIRFLOW_DEPS}]==${AIRFLOW_VERSION} --constraint /requirements-python3.6.txt \
+    && pip install apache-airflow[aws,s3,azure,kerberos,crypto,celery,postgres,hdfs,hive,jdbc,mysql,password,ldap,statsd,ssh${AIRFLOW_DEPS:+,}${AIRFLOW_DEPS}]==${AIRFLOW_VERSION} --constraint /requirements-python3.6.txt \
     && pip install 'redis==3.2' \
     && if [ -n "${PYTHON_DEPS}" ]; then pip install ${PYTHON_DEPS}; fi \
     && apt-get purge --auto-remove -yqq $buildDeps \
@@ -89,12 +93,13 @@ RUN set -ex \
 COPY script/entrypoint.sh /entrypoint.sh
 COPY config/airflow.cfg ${AIRFLOW_USER_HOME}/airflow.cfg
 
-RUN chown -R dlarchive: ${AIRFLOW_USER_HOME}
+RUN ufw allow ssh
+RUN chown -R airflow: ${AIRFLOW_USER_HOME}
 RUN mkdir -p ${AIRFLOW_USER_HOME}/logs
 RUN chmod -R 777 ${AIRFLOW_USER_HOME}
 RUN chmod -R 755 /entrypoint.sh
 
-EXPOSE 443 8080 5555 8793
+EXPOSE 22 443 8080 5555 8793
 
 USER airflow
 WORKDIR ${AIRFLOW_USER_HOME}
