@@ -76,7 +76,9 @@ target/
 .python-version
 
 # Airflow databases
-.airflow-materials/airflow-section-8/mnt/postgres/
+.airflow-materials/airflow-section-8/mnt/postgres/*
+.build-ais-airflow/mnt/postgres/*
+
 # celery beat schedule file
 celerybeat-schedule
 
