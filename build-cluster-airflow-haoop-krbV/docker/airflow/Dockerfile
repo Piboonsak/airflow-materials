@@ -1,0 +1,81 @@
+# Base Image
+FROM spark-base:latest
+LABEL maintainer="MarcLamberti"
+
+# Arguments that can be set with docker build
+ARG AIRFLOW_VERSION=1.10.11
+ARG AIRFLOW_HOME=/usr/local/airflow
+
+# Export the environment variable AIRFLOW_HOME where airflow will be installed
+ENV AIRFLOW_HOME=${AIRFLOW_HOME}
+
+# Install dependencies and tools
+RUN apt-get update -y && \
+    apt-get upgrade -yqq && \
+    apt-get install -yqq --no-install-recommends \
+    python3-dev \
+    net-tools \
+    dnsutils \
+    ldap-utils \
+    wget curl \
+    libczmq-dev \
+    libssl-dev \
+    git \
+    inetutils-telnet \
+    bind9utils freetds-dev \
+    libkrb5-dev \
+    libsasl2-dev \
+    libffi-dev libpq-dev \
+    freetds-bin build-essential \
+    default-libmysqlclient-dev \
+    apt-utils \
+    locales \
+    lsb-release \
+    iputils-ping \
+    ldap-utils libsasl2-modules-gssapi-mit \
+    libvips-tools iptotal \
+    rsync \
+    zip \
+    unzip \
+    gcc \
+    vim htop \
+    netcat \
+    && apt-get autoremove -yqq --purge && apt-get clean
+
+COPY ./requirements-python3.7.txt /requirements-python3.7.txt
+
+# Upgrade pip
+# Create airflow user 
+# Install apache airflow with subpackages
+RUN pip install --upgrade pip && \
+    useradd -ms /bin/bash -d ${AIRFLOW_HOME} airflow && \
+    pip install apache-airflow[crypto,celery,postgres,hive,jdbc,mysql,ssh,docker,hdfs,ldap,redis,slack,webhdfs]==${AIRFLOW_VERSION} --constraint /requirements-python3.7.txt
+
+# Copy the airflow.cfg file (config)
+#COPY ./config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
+
+# Set the owner of the files in AIRFLOW_HOME to the user airflow
+RUN chown -R airflow: ${AIRFLOW_HOME}
+
+# Copy the entrypoint.sh from host to container (at path AIRFLOW_HOME)
+COPY ./start-airflow.sh ./start-airflow.sh
+
+# Set the entrypoint.sh file to be executable
+RUN chmod +x ./start-airflow.sh
+
+# Set the username to use
+# Set root for run inside container
+USER root
+SHELL ["/bin/bash", "-c"]
+
+# add airflow user
+#RUN useradd -m airflow && echo "airflow:airflow" | chpasswd && adduser airflow sudo
+
+# Create the folder dags inside $AIRFLOW_HOME
+RUN mkdir -p ${AIRFLOW_HOME}/dags
+
+# Expose ports (just to indicate that this container needs to map port)
+EXPOSE 443 8080 5555 8793
+
+# Execute start-airflow.sh
+CMD [ "./start-airflow.sh" ]
