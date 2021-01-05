@@ -49,8 +49,7 @@ RUN set -ex \
         libreadline-dev \
         libc6-dev \
         zlib1g-dev \
-        git \
-    ' \
+        ' \
     && apt-get update -yqq \
     && apt-get upgrade -yqq \
     && apt-get install -yqq --no-install-recommends \
@@ -59,14 +58,14 @@ RUN set -ex \
         build-essential \
         default-libmysqlclient-dev \
         apt-utils \
-        krb5-user krb5-kdc krb5-admin-server krb5-config \
-        libpam-krb5 \
-        gcc curl wget vim zip unzip \
-        net-tools inetutils-telnet iputils-ping libvips-tools iptotal \
         dnsutils bind9utils \
-        ldap-utils libsasl2-modules-gssapi-mit \
+        net-tools inetutils-telnet iputils-ping libvips-tools iptotal \
         openssh-server \
-        rsync vim htop \
+        krb5-user krb5-kdc krb5-admin-server krb5-config libpam-krb5 \
+        realmd samba samba-common sssd \
+        ldap-utils libsasl2-modules-gssapi-mit \
+        gcc curl wget vim zip unzip \
+        git rsync vim htop \
         netcat \
         lsb-release \
         locales \
@@ -99,6 +98,11 @@ COPY config/airflow.cfg ${AIRFLOW_USER_HOME}/airflow.cfg
 # Set root for run inside container
 USER root
 SHELL ["/bin/bash", "-c"]
+
+RUN service ssh start
+RUN service ssh enable
+RUN service sssd start
+RUN service sssd enable
 
 RUN chown -R airflow: ${AIRFLOW_USER_HOME}
 RUN mkdir -p ${AIRFLOW_USER_HOME}/logs
