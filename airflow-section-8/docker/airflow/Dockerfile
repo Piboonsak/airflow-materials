@@ -66,7 +66,7 @@ RUN set -ex \
         net-tools inetutils-telnet iputils-ping libvips-tools iptotal \
         dnsutils bind9utils \
         ldap-utils libsasl2-modules-gssapi-mit \
-        openssh-server openldap-clients adcli sssd sudo \
+        openssh-server adcli sssd sudo \
         gcc curl wget vim zip unzip \
         rsync vim htop \
         netcat \
