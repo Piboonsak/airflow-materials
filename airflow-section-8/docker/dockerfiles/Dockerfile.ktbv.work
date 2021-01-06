@@ -49,7 +49,8 @@ RUN set -ex \
         libreadline-dev \
         libc6-dev \
         zlib1g-dev \
-        ' \
+        git \
+    ' \
     && apt-get update -yqq \
     && apt-get upgrade -yqq \
     && apt-get install -yqq --no-install-recommends \
@@ -58,14 +59,14 @@ RUN set -ex \
         build-essential \
         default-libmysqlclient-dev \
         apt-utils \
-        dnsutils bind9utils \
-        net-tools inetutils-telnet iputils-ping libvips-tools iptotal \
-        openssh-server \
-        krb5-user libpam-krb5 \
-        realmd samba samba-common sssd \
-        ldap-utils libsasl2-modules-gssapi-mit \
+        krb5-user krb5-kdc krb5-admin-server krb5-config \
+        libpam-krb5 \
         gcc curl wget vim zip unzip \
-        git rsync vim htop \
+        net-tools inetutils-telnet iputils-ping libvips-tools iptotal \
+        dnsutils bind9utils \
+        ldap-utils libsasl2-modules-gssapi-mit \
+        openssh-server \
+        rsync vim htop \
         netcat \
         lsb-release \
         locales \
@@ -78,7 +79,7 @@ RUN set -ex \
     && pip install pyOpenSSL \
     && pip install ndg-httpsclient \
     && pip install pyasn1 \
-    && pip install apache-airflow[crypto,celery,postgres,hdfs,hive,jdbc,mysql,docker,redis,ldap,webhdfs,statsd,ssh${AIRFLOW_DEPS:+,}${AIRFLOW_DEPS}]==${AIRFLOW_VERSION} --constraint /requirements-python3.7.txt \
+    && pip install apache-airflow[kerberos,crypto,celery,postgres,hdfs,hive,jdbc,mysql,docker,redis,ldap,slack,webhdfs,statsd,ssh${AIRFLOW_DEPS:+,}${AIRFLOW_DEPS}]==${AIRFLOW_VERSION} --constraint /requirements-python3.7.txt \
     && pip install 'redis==3.2' \
     && if [ -n "${PYTHON_DEPS}" ]; then pip install ${PYTHON_DEPS}; fi \
     && apt-get purge --auto-remove -yqq $buildDeps \

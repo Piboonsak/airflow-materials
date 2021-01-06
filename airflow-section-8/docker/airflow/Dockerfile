@@ -4,7 +4,7 @@
 # BUILD: docker build --rm -t puckel/docker-airflow .
 # SOURCE: https://github.com/puckel/docker-airflow
 
-FROM spark-base:latest
+FROM python:3.8-slim
 LABEL maintainer="Piboonsak.262@gmail.com"
 
 # Never prompt the user for choices on installation/configuration of packages
@@ -12,7 +12,9 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV TERM linux
 
 # Airflow
-ARG AIRFLOW_VERSION=1.10.11
+ARG AIRFLOW_UID
+ARG AIRFLOW_GID
+ARG AIRFLOW_VERSION=1.10.12
 ARG AIRFLOW_USER_HOME=/usr/local/airflow
 ARG AIRFLOW_DEPS=""
 ARG PYTHON_DEPS=""
@@ -25,7 +27,7 @@ ENV LC_ALL en_US.UTF-8
 ENV LC_CTYPE en_US.UTF-8
 ENV LC_MESSAGES en_US.UTF-8
 
-COPY ./requirements-python3.7.txt /requirements-python3.7.txt
+COPY ./requirements-python3.8.txt /requirements-python3.8.txt
 
 # Disable noisy "Handling signal" log messages:
 # ENV GUNICORN_CMD_ARGS --log-level WARNING
@@ -59,13 +61,13 @@ RUN set -ex \
         build-essential \
         default-libmysqlclient-dev \
         apt-utils \
-        krb5-user krb5-kdc krb5-admin-server krb5-config \
+        krb5-user \
         libpam-krb5 \
-        gcc curl wget vim zip unzip \
         net-tools inetutils-telnet iputils-ping libvips-tools iptotal \
         dnsutils bind9utils \
         ldap-utils libsasl2-modules-gssapi-mit \
-        openssh-server \
+        openssh-server sssd sudo \
+        gcc curl wget vim zip unzip \
         rsync vim htop \
         netcat \
         lsb-release \
@@ -79,7 +81,7 @@ RUN set -ex \
     && pip install pyOpenSSL \
     && pip install ndg-httpsclient \
     && pip install pyasn1 \
-    && pip install apache-airflow[kerberos,crypto,celery,postgres,hdfs,hive,jdbc,mysql,docker,redis,ldap,slack,webhdfs,statsd,ssh${AIRFLOW_DEPS:+,}${AIRFLOW_DEPS}]==${AIRFLOW_VERSION} --constraint /requirements-python3.7.txt \
+    && pip install apache-airflow[crypto,celery,postgres,hdfs,hive,jdbc,mysql,docker,redis,ldap,slack,webhdfs,statsd,ssh${AIRFLOW_DEPS:+,}${AIRFLOW_DEPS}]==${AIRFLOW_VERSION} --constraint /requirements-python3.8.txt \
     && pip install 'redis==3.2' \
     && if [ -n "${PYTHON_DEPS}" ]; then pip install ${PYTHON_DEPS}; fi \
     && apt-get purge --auto-remove -yqq $buildDeps \
