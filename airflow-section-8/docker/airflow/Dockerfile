@@ -79,6 +79,8 @@ RUN set -ex \
     && pip install -U pip setuptools wheel \
     && pip install pytz \
     && pip install pyOpenSSL \
+    && pip install paramiko \
+    && pip install sshtunnel \
     && pip install ndg-httpsclient \
     && pip install pyasn1 \
     && pip install apache-airflow[crypto,celery,postgres,hdfs,hive,jdbc,mysql,docker,redis,ldap,slack,webhdfs,statsd,ssh${AIRFLOW_DEPS:+,}${AIRFLOW_DEPS}]==${AIRFLOW_VERSION} --constraint /requirements-python3.8.txt \
@@ -107,7 +109,7 @@ RUN mkdir -p ${AIRFLOW_USER_HOME}/logs
 RUN chmod -R 777 ${AIRFLOW_USER_HOME}
 RUN chmod -R 755 /entrypoint.sh
 
-EXPOSE 22 443 8080 5555 8793
+EXPOSE 22 443 8443 8080 5555 8793
 
 WORKDIR ${AIRFLOW_USER_HOME}
 ENTRYPOINT ["/entrypoint.sh"]
