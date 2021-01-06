@@ -14,7 +14,7 @@ Flask-WTF==0.14.3
 Flask==1.1.2
 JPype1==0.7.1
 JayDeBeApi==1.2.3
-Jinja2==2.11.2
+Jinja2==2.10.3
 Mako==1.1.3
 Markdown==2.6.11
 MarkupSafe==1.1.1
@@ -95,7 +95,7 @@ dnspython==1.16.0
 docker-pycreds==0.4.0
 docker==3.7.3
 docopt==0.6.2
-docutils==0.15.2
+docutils==0.16
 ecdsa==0.14.1
 elasticsearch-dsl==5.4.0
 elasticsearch==5.5.3
@@ -107,7 +107,7 @@ filelock==3.0.12
 flake8-colors==0.1.6
 flake8==3.8.3
 flaky==3.7.0
-flask-swagger==0.2.14
+flask-swagger==0.2.13
 flower==0.9.5
 freezegun==0.3.15
 fsspec==0.8.0
@@ -141,7 +141,7 @@ graphviz==0.14.1
 grpc-google-iam-v1==0.12.3
 grpcio-gcp==0.2.2
 grpcio==1.31.0
-gunicorn==20.0.4
+gunicorn==19.5.0
 hdfs==2.5.8
 hmsclient==0.1.1
 httplib2==0.18.1
@@ -319,7 +319,7 @@ vertica-python==0.11.0
 vine==1.3.0
 virtualenv==20.0.30
 wcwidth==0.2.5
-websocket-client==0.57.0
+websocket-client==0.54.0
 wrapt==1.12.1
 xmltodict==0.12.0
 yamllint==1.24.2

@@ -14,6 +14,7 @@ ENV TERM linux
 # Airflow
 ARG AIRFLOW_UID
 ARG AIRFLOW_GID
+
 ARG AIRFLOW_VERSION=1.10.12
 ARG AIRFLOW_USER_HOME=/usr/local/airflow
 ARG AIRFLOW_DEPS=""
@@ -61,12 +62,11 @@ RUN set -ex \
         build-essential \
         default-libmysqlclient-dev \
         apt-utils \
-        krb5-user \
-        libpam-krb5 \
+        krb5-user libpam-krb5 \
         net-tools inetutils-telnet iputils-ping libvips-tools iptotal \
         dnsutils bind9utils \
         ldap-utils libsasl2-modules-gssapi-mit \
-        openssh-server sssd sudo \
+        openssh-server openldap-clients adcli sssd sudo \
         gcc curl wget vim zip unzip \
         rsync vim htop \
         netcat \
