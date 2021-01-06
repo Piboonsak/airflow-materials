@@ -4,7 +4,7 @@
 # BUILD: docker build --rm -t puckel/docker-airflow .
 # SOURCE: https://github.com/puckel/docker-airflow
 
-FROM spark-base:latest
+FROM python:3.6.9-slim-stretch
 LABEL maintainer="Piboonsak.262@gmail.com"
 
 # Never prompt the user for choices on installation/configuration of packages
@@ -25,7 +25,7 @@ ENV LC_ALL en_US.UTF-8
 ENV LC_CTYPE en_US.UTF-8
 ENV LC_MESSAGES en_US.UTF-8
 
-COPY ./requirements-python3.7.txt /requirements-python3.7.txt
+COPY ./requirements-python3.6.txt /requirements-python3.6.txt
 
 # Disable noisy "Handling signal" log messages:
 # ENV GUNICORN_CMD_ARGS --log-level WARNING
@@ -34,7 +34,6 @@ RUN set -ex \
     && buildDeps=' \
         freetds-dev \
         libkrb5-dev \
-        python3-dev \
         libsasl2-dev \
         libssl-dev \
         libexpat1-dev \
@@ -42,7 +41,6 @@ RUN set -ex \
         libgdbm-dev \
         libpq-dev \
         libbz2-dev \
-        libczmq-dev \
         libsqlite3-dev \
         liblzma-dev \
         libncursesw5-dev \
@@ -61,14 +59,13 @@ RUN set -ex \
         apt-utils \
         krb5-user krb5-kdc krb5-admin-server krb5-config \
         libpam-krb5 \
-        gcc curl wget vim zip unzip \
-        net-tools inetutils-telnet iputils-ping libvips-tools iptotal \
-        dnsutils bind9utils \
-        ldap-utils libsasl2-modules-gssapi-mit \
+        curl \
+        wget \
+        vim \
+        net-tools \
         openssh-server \
-        rsync vim htop \
+        rsync \
         netcat \
-        lsb-release \
         locales \
     && sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
     && locale-gen \
@@ -79,7 +76,7 @@ RUN set -ex \
     && pip install pyOpenSSL \
     && pip install ndg-httpsclient \
     && pip install pyasn1 \
-    && pip install apache-airflow[kerberos,crypto,celery,postgres,hdfs,hive,jdbc,mysql,docker,redis,ldap,slack,webhdfs,statsd,ssh${AIRFLOW_DEPS:+,}${AIRFLOW_DEPS}]==${AIRFLOW_VERSION} --constraint /requirements-python3.7.txt \
+    && pip install apache-airflow[aws,s3,azure,kerberos,crypto,celery,postgres,hdfs,hive,jdbc,mysql,password,ldap,statsd,ssh${AIRFLOW_DEPS:+,}${AIRFLOW_DEPS}]==${AIRFLOW_VERSION} --constraint /requirements-python3.6.txt \
     && pip install 'redis==3.2' \
     && if [ -n "${PYTHON_DEPS}" ]; then pip install ${PYTHON_DEPS}; fi \
     && apt-get purge --auto-remove -yqq $buildDeps \
@@ -96,10 +93,7 @@ RUN set -ex \
 COPY script/entrypoint.sh /entrypoint.sh
 COPY config/airflow.cfg ${AIRFLOW_USER_HOME}/airflow.cfg
 
-# Set root for run inside container
-USER root
-SHELL ["/bin/bash", "-c"]
-
+RUN ufw allow ssh
 RUN chown -R airflow: ${AIRFLOW_USER_HOME}
 RUN mkdir -p ${AIRFLOW_USER_HOME}/logs
 RUN chmod -R 777 ${AIRFLOW_USER_HOME}
@@ -107,6 +101,7 @@ RUN chmod -R 755 /entrypoint.sh
 
 EXPOSE 22 443 8080 5555 8793
 
+USER airflow
 WORKDIR ${AIRFLOW_USER_HOME}
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["webserver"]

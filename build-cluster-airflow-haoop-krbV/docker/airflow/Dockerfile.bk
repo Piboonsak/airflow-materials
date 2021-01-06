@@ -14,11 +14,9 @@ RUN apt-get update -y && \
     apt-get upgrade -yqq && \
     apt-get install -yqq --no-install-recommends \
     python3-dev \
-    net-tools \
-    dnsutils \
-    ldap-utils \
-    wget curl \
+    wget \
     libczmq-dev \
+    curl \
     libssl-dev \
     git \
     inetutils-telnet \
@@ -29,16 +27,11 @@ RUN apt-get update -y && \
     freetds-bin build-essential \
     default-libmysqlclient-dev \
     apt-utils \
-    locales \
-    lsb-release \
-    iputils-ping \
-    ldap-utils libsasl2-modules-gssapi-mit \
-    libvips-tools iptotal \
     rsync \
     zip \
     unzip \
     gcc \
-    vim htop \
+    vim \
     netcat \
     && apt-get autoremove -yqq --purge && apt-get clean
 
@@ -49,7 +42,7 @@ COPY ./requirements-python3.7.txt /requirements-python3.7.txt
 # Install apache airflow with subpackages
 RUN pip install --upgrade pip && \
     useradd -ms /bin/bash -d ${AIRFLOW_HOME} airflow && \
-    pip install apache-airflow[crypto,celery,postgres,hive,jdbc,mysql,ssh,docker,hdfs,ldap,redis,slack,webhdfs]==${AIRFLOW_VERSION} --constraint /requirements-python3.7.txt
+    pip install apache-airflow[crypto,celery,postgres,hive,jdbc,mysql,ssh,docker,hdfs,redis,slack,webhdfs]==${AIRFLOW_VERSION} --constraint /requirements-python3.7.txt
 
 # Copy the airflow.cfg file (config)
 #COPY ./config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
@@ -64,18 +57,15 @@ COPY ./start-airflow.sh ./start-airflow.sh
 RUN chmod +x ./start-airflow.sh
 
 # Set the username to use
-# Set root for run inside container
-USER root
-SHELL ["/bin/bash", "-c"]
-
-# add airflow user
-#RUN useradd -m airflow && echo "airflow:airflow" | chpasswd && adduser airflow sudo
+USER airflow
 
 # Create the folder dags inside $AIRFLOW_HOME
 RUN mkdir -p ${AIRFLOW_HOME}/dags
 
 # Expose ports (just to indicate that this container needs to map port)
-EXPOSE 443 8080 5555 8793
+EXPOSE 8080
 
 # Execute start-airflow.sh
 CMD [ "./start-airflow.sh" ]
+
+    
